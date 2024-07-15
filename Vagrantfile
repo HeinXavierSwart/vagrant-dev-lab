@@ -12,7 +12,30 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
-  config.vm.box = "base"
+  config.vm.box = "ubuntu/bionic64"
+
+  # Enable Landrush for DNS functionality
+  config.landrush.enabled = true
+
+  # Create 6 VMs
+  (1..6).each do |i|
+    config.vm.define "vm#{i}" do |vm_config|
+      vm_config.vm.hostname = "vm#{i}.vagrant.test"
+      vm_config.vm.network "private_network", type: "dhcp"
+
+      vm_config.vm.provider "virtualbox" do |vb|
+        vb.name = "vm#{i}"
+        vb.memory = 512
+        vb.cpus = 1
+      end
+
+      # Provision each VM to install necessary tools
+      vm_config.vm.provision "shell", inline: <<-SHELL
+        sudo apt-get update
+        sudo apt-get install -y openssh-server bind9-host
+      SHELL
+    end
+  end
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
