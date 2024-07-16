@@ -12,7 +12,7 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
-  config.vm.box = "ubuntu/bionic64"
+  config.vm.box = "bento/rockylinux-9"
 
   # Enable Landrush for DNS functionality
   config.landrush.enabled = true
@@ -31,8 +31,8 @@ Vagrant.configure("2") do |config|
 
       # Provision each VM to install necessary tools
       vm_config.vm.provision "shell", inline: <<-SHELL
-        sudo apt-get update
-        sudo apt-get install -y openssh-server bind9-host
+        sudo dnf update
+        sudo dnf install -y openssh-server bind9-host
       SHELL
     end
   end
